@@ -11,6 +11,8 @@ public class Game {
     private final Deck deck;
     private final Hand playerHand = new Hand();
     private final Hand dealerHand = new Hand();
+    private int playerWalletAmount;
+    private int currentBet;
 
     public static void main(String[] args) {
         Game game = new Game();
@@ -79,14 +81,19 @@ public class Game {
     private void determineOutcome(boolean playerBusted) {
         if (playerBusted) {
             System.out.println("You Busted, so you lose.  💸");
+            //playerLoses();
         } else if (dealerHand.isBust()) {
             System.out.println("Dealer went BUST, Player wins! Yay for you!! 💵");
+            //playerWins();
         } else if (playerHand.beats(dealerHand)) {
             System.out.println("You beat the Dealer! 💵");
+            //playerWins();
         } else if (playerHand.pushes(dealerHand)) {
             System.out.println("Push: You tie with the Dealer. 💸");
+            //playerPushes()
         } else {
             System.out.println("You lost to the Dealer. 💸");
+            //playerLoses()
         }
     }
 
@@ -141,4 +148,33 @@ public class Game {
         playerHand.displayHand();
     }
 
+    public int playerBalance() {
+        return playerWalletAmount;
+    }
+
+    public void playerDeposits(int amount) {
+        this.playerWalletAmount = amount;
+    }
+
+    public void playerBets(int amount) {
+        this.playerWalletAmount -= amount;
+        this.currentBet = amount;
+    }
+
+    public void playerWins() {
+        processBet(2);
+    }
+
+    public void playerLoses() {
+        processBet(0);
+    }
+
+    public void playerPushes() {
+        processBet(1);
+    }
+
+    private void processBet(int i) {
+        this.playerWalletAmount += (currentBet * i);
+        this.currentBet = 0;
+    }
 }
